@@ -1,0 +1,295 @@
+C51 COMPILER V9.60.0.0   TEST                                                              04/30/2023 11:41:33 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE TEST
+OBJECT MODULE PLACED IN .\Objects\test.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE test.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\test
+                    -.lst) TABS(2) OBJECT(.\Objects\test.obj)
+
+line level    source
+
+   1          #include <REGX51.H>
+   2          #include <Thu_Vien_LCD.h>
+   3          
+   4          #define R1 P2_0
+   5          #define R2 P2_1
+   6          #define R3 P2_2
+   7          #define R4 P2_3
+   8          #define C1 P2_4
+   9          #define C2 P2_5
+  10          #define C3 P2_6
+  11          
+  12          #define CBVAO P1_0
+  13          #define CBRA P1_1
+  14          #define BUZZ P1_2
+  15          int Input = 0, GioiHan = 50, SoLuong = 0, preGioiHan = 0, preSoLuong = 0, Count = 0, flag = 0; 
+  16          
+  17          void delay(int ms)
+  18          {
+  19   1        int i, j;
+  20   1        for (i= 0; i < ms; i++)
+  21   1          for (j = 0; j < 123; j++);
+  22   1      }
+  23          void Reset();
+  24          void Set();
+  25          int Quet_Phim()
+  26          {
+  27   1        int InputPhim = -1;
+  28   1        R1 = 0;
+  29   1        if (C1 == 0)
+  30   1        {
+  31   2          InputPhim = 1;
+  32   2          delay(300);
+  33   2        }
+  34   1        if (C2 == 0)
+  35   1        {
+  36   2          InputPhim = 2;
+  37   2          delay(300);
+  38   2        }
+  39   1        if (C3 == 0)
+  40   1        {
+  41   2          InputPhim = 3;
+  42   2          delay(300);
+  43   2        }
+  44   1        R1 = 1;
+  45   1        
+  46   1        R2 = 0;
+  47   1        if (C1 == 0)
+  48   1        {
+  49   2          InputPhim = 4;
+  50   2          delay(300);
+  51   2        }
+  52   1        if (C2 == 0)
+  53   1        {
+  54   2          InputPhim = 5;
+C51 COMPILER V9.60.0.0   TEST                                                              04/30/2023 11:41:33 PAGE 2   
+
+  55   2          delay(300);
+  56   2        }
+  57   1        if (C3 == 0)
+  58   1        {
+  59   2          InputPhim = 6;
+  60   2          delay(300);
+  61   2        }
+  62   1        R2 = 1;
+  63   1        
+  64   1        R3 = 0;
+  65   1        if (C1 == 0)
+  66   1        {
+  67   2          InputPhim = 7;
+  68   2          delay(300);
+  69   2        }
+  70   1        if (C2 == 0)
+  71   1        {
+  72   2          InputPhim = 8;
+  73   2          delay(300);
+  74   2        }
+  75   1        if (C3 == 0)
+  76   1        {
+  77   2          InputPhim = 9;
+  78   2          delay(300);
+  79   2        }
+  80   1        R3 = 1;
+  81   1        
+  82   1        R4 = 0;
+  83   1        if (C1 == 0)
+  84   1        {
+  85   2          InputPhim = 100; //Reset
+  86   2          delay(300);
+  87   2        }
+  88   1        if (C2 == 0)
+  89   1        {
+  90   2          InputPhim = 0;
+  91   2          delay(300);
+  92   2        }
+  93   1        if (C3 == 0)
+  94   1        {
+  95   2          InputPhim = 200; //Set
+  96   2          delay(300);
+  97   2        }
+  98   1        R4 = 1;
+  99   1        return InputPhim;
+ 100   1      }
+ 101          void SetSoLuong()
+ 102          {
+ 103   1        LCD_Gotoxy(0,0);
+ 104   1        preSoLuong = SoLuong;
+ 105   1        SoLuong = 0;
+ 106   1        LCD_Puts("SET QA: ");
+ 107   1        delay(300);
+ 108   1        Count = 0;
+ 109   1        while (Count < 4)
+ 110   1        {
+ 111   2          Input = Quet_Phim();
+ 112   2          if (Input == 200 && Count == 0)
+ 113   2          {
+ 114   3            SoLuong = preSoLuong;
+ 115   3            break;
+ 116   3          }
+C51 COMPILER V9.60.0.0   TEST                                                              04/30/2023 11:41:33 PAGE 3   
+
+ 117   2          else if (Input == 200)
+ 118   2            break;
+ 119   2          else if (Input == 100 || Input == -1)
+ 120   2            continue;
+ 121   2          SoLuong = SoLuong*10 + Input;
+ 122   2          LCD_PutNumber(Input);
+ 123   2          Count++;
+ 124   2          delay(300);
+ 125   2        };
+ 126   1      }
+ 127          void SetGioiHan()
+ 128          {
+ 129   1        LCD_Gotoxy(0,1);
+ 130   1        preGioiHan = GioiHan;
+ 131   1        GioiHan = 0;
+ 132   1        LCD_Puts("SET CA: ");
+ 133   1        delay(300);
+ 134   1        Count = 0;
+ 135   1        while(Count < 4)
+ 136   1        {
+ 137   2          Input = Quet_Phim();
+ 138   2          if (Input == 200 && Count == 0)
+ 139   2          {
+ 140   3            GioiHan = preGioiHan;
+ 141   3            break;
+ 142   3          }
+ 143   2          else if (Input == 200)
+ 144   2            break;
+ 145   2          else if (Input == 100 || Input == -1)
+ 146   2            continue;
+ 147   2          GioiHan = GioiHan*10 + Input;
+ 148   2          LCD_PutNumber(Input);
+ 149   2          Count++;
+ 150   2          delay(300);
+ 151   2        };
+ 152   1      }
+ 153          
+ 154          void Set()
+ 155          {
+ 156   1        LCD_Clear();
+ 157   1        SetSoLuong();
+ 158   1        SetGioiHan();
+ 159   1        while(GioiHan < SoLuong)
+ 160   1        {
+ 161   2          LCD_Clear();
+ 162   2          LCD_Gotoxy(0,1);
+ 163   2          LCD_Puts("UPDATE FAIL!");
+ 164   2          delay(1000);
+ 165   2          LCD_Clear();
+ 166   2          SetSoLuong();
+ 167   2          SetGioiHan();
+ 168   2        }
+ 169   1        LCD_Clear();
+ 170   1        LCD_Gotoxy(0,1);
+ 171   1        LCD_Puts("UPDATE SUCCESS!");
+ 172   1        delay(1000);
+ 173   1      }
+ 174          void Reset()
+ 175          {
+ 176   1        SoLuong = 0;
+ 177   1        GioiHan = 50;
+ 178   1      }
+C51 COMPILER V9.60.0.0   TEST                                                              04/30/2023 11:41:33 PAGE 4   
+
+ 179          void HienThi()
+ 180          {
+ 181   1        LCD_Clear();
+ 182   1        LCD_Gotoxy(0,0); 
+ 183   1        LCD_Puts("QUANTITY: "); 
+ 184   1        LCD_PutNumber(SoLuong);
+ 185   1        LCD_Gotoxy(0,1);
+ 186   1        LCD_Puts("VACANCY : ");
+ 187   1        LCD_PutNumber(GioiHan - SoLuong);
+ 188   1        delay(300);
+ 189   1      }
+ 190          void CamBienTang()
+ 191          {
+ 192   1        while(1)
+ 193   1        {
+ 194   2          if(CBRA == 0)
+ 195   2          {
+ 196   3            while(CBRA == 0);
+ 197   3            if (SoLuong <= GioiHan)
+ 198   3              SoLuong++;
+ 199   3            if (SoLuong <= GioiHan)
+ 200   3              HienThi();
+ 201   3            break;
+ 202   3          }
+ 203   2        }
+ 204   1      }
+ 205            
+ 206          void CamBienGiam()
+ 207          {
+ 208   1        while(1)
+ 209   1        {
+ 210   2          if(CBVAO == 0)
+ 211   2          {
+ 212   3            while(CBVAO == 0);
+ 213   3            if (SoLuong > 0)
+ 214   3            SoLuong--;
+ 215   3            HienThi();
+ 216   3            break;
+ 217   3          }
+ 218   2        }
+ 219   1      }
+ 220          
+ 221          void main()
+ 222          {
+ 223   1        BUZZ = 0;
+ 224   1        LCD_Init(); // Khoi tao LCD
+ 225   1        HienThi();
+ 226   1        while(1)
+ 227   1        {
+ 228   2          if (CBVAO == 0)
+ 229   2          {
+ 230   3            if (SoLuong == GioiHan)
+ 231   3            {
+ 232   4              BUZZ = 1;
+ 233   4              LCD_Clear();
+ 234   4              LCD_Gotoxy(0,1);
+ 235   4              LCD_Puts("OVERLOAD!");
+ 236   4              delay(10000);
+ 237   4              BUZZ = 0;
+ 238   4              HienThi();
+ 239   4              continue;
+ 240   4            }
+C51 COMPILER V9.60.0.0   TEST                                                              04/30/2023 11:41:33 PAGE 5   
+
+ 241   3            while(CBVAO == 0);
+ 242   3            CamBienTang();
+ 243   3            continue;
+ 244   3          }
+ 245   2          if (CBRA == 0)
+ 246   2          {
+ 247   3            while(CBRA == 0);
+ 248   3            CamBienGiam();
+ 249   3            continue;
+ 250   3          }
+ 251   2          Input = Quet_Phim();
+ 252   2          if (Input == 100)
+ 253   2          {
+ 254   3            Reset();
+ 255   3            HienThi();
+ 256   3          }
+ 257   2          else if(Input == 200)
+ 258   2          {
+ 259   3            Set();
+ 260   3            HienThi();
+ 261   3          }
+ 262   2        }
+ 263   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    810    ----
+   CONSTANT SIZE    =     79    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     14    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
